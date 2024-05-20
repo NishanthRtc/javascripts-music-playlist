@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: rgb(240, 230, 140); /* Light goldenrod yellow */
+    }
+
+    .container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .form-container {
+      width: 300px;
+      margin: 0 auto;
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    button {
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #loginMessage {
+      margin-top: 10px;
+      display: none;
+      color: #f00;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="loginForm" class="form-container">
+      <h2>Login</h2>
+      <form id="login">
+        <input type="text" id="name" placeholder="Name">
+        <input type="email" id="email" placeholder="Email">
+        <button type="submit">Login</button>
+      </form>
+      <p id="loginMessage"></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login').addEventListener('submit', function(event) {
+      event.preventDefault();
+      var name = document.getElementById('name').value;
+      var email = document.getElementById('email').value;
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const foundUser = data.find(user => user.name === name && user.email === email);
+          if (foundUser) {
+            // Redirect to the next page upon successful login
+            openNewTab('file:///D:/js%20projects/music%20palyer/music.html');
+          } else {
+            document.getElementById('loginMessage').style.display = 'block';
+            document.getElementById('loginMessage').textContent = 'Login failed. User not found or incorrect credentials.';
+          }
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+
+    function openNewTab(url) {
+      var win = window.open(url, '_blank');
+      win.focus();
+    }
+  </script>
+</body>
+</html>
